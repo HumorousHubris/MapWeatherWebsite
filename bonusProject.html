@@ -1,0 +1,169 @@
+<!doctype html>
+<html>
+<head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Weather and Maps</title>
+<meta charset="utf-8">
+<script>
+function update() {
+	document.getElementById("mapFrame").src = "https://www.google.com/maps/embed/v1/place?key=AIzaSyBdipYMkYZjIaWh_WwgU2J51MHULF2sfFQ&q=" + document.getElementById("searchbox").value
+	geocode()
+}
+function daysOfWeek(){
+	var d = new Date();
+	var currentDay = d.getDay()+1;
+	var i;
+	for(i=0; i < 4; i++){
+		if(currentDay + i == 7){currentDay -= 7;}
+		document.getElementById("day" + i).innerHTML = day2str(currentDay+i);
+	}
+}
+
+function day2str(day) {
+	daysArray = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+	return daysArray[day];
+}
+
+function geocode() {
+	var link = "https://maps.googleapis.com/maps/api/geocode/json?address=" + document.getElementById("searchbox").value + "&key=AIzaSyBdipYMkYZjIaWh_WwgU2J51MHULF2sfFQ"
+	$.getJSON(link, function(data){
+		console.log(data);
+		if(data.status == "ZERO_RESULTS"){noResult(); return 0;}
+		
+		city=data.results[0].address_components[1].long_name;
+		document.getElementById("cityName").innerHTML = "<center>" + city + "</center>";
+		
+		lat = data.results[0].geometry.location.lat;
+		lng = data.results[0].geometry.location.lng;
+		var weatherLocLink = "http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=%09T3bLh61BmQg7PoH9VIsTgbmfRFCpBGdh&q=" + lat + "%2C" + lng;
+		$.getJSON(weatherLocLink, function(weaLocData) {
+			console.log(weaLocData);
+			locCode = weaLocData.Key;
+			
+			var weatherLink = "http://dataservice.accuweather.com/forecasts/v1/daily/5day/" + locCode + "?apikey=%09T3bLh61BmQg7PoH9VIsTgbmfRFCpBGdh"
+			$.getJSON(weatherLink, function(weaData){
+			console.log(weaData);
+			document.getElementById("weatherDescription").innerHTML = "<center>" + weaData.Headline.Text + "</center>";
+			//set main icon here
+			var icoNum = weaData.DailyForecasts[0].Day.Icon;
+			document.getElementById("weatherImage").src = "./images/" + icoNum + ".png";
+			document.getElementById("todayTemp").innerHTML = "<center>" + weaData.DailyForecasts[0].Temperature.Maximum.Value + "/" + weaData.DailyForecasts[0].Temperature.Minimum.Value + "</center>";
+			var i;
+			for(i=0; i < 4; i++){
+				document.getElementById("ico" + i).src = "./images/" + weaData.DailyForecasts[i+1].Day.Icon + ".png"
+				document.getElementById("lo" + i).innerHTML = weaData.DailyForecasts[i].Temperature.Minimum.Value;
+				document.getElementById("hi" + i).innerHTML = weaData.DailyForecasts[i].Temperature.Maximum.Value;
+			}
+			
+			});
+		});
+	});
+	
+}
+
+function noResult(){
+	document.getElementById("weatherImage").src = "noresult.png";
+	document.getElementById("cityName").innerHTML = "<center>No result</center>";
+	document.getElementById("weatherDescription").innerHTML = "<center>No result</center>";
+	document.getElementById("todayTemp").innerHTML = "<center>--/--</center>";
+	var i;
+	for(i=0; i < 4; i++){
+		document.getElementById("ico" + i).src = "noresult.png"
+		document.getElementById("lo" + i).innerHTML = "--";
+		document.getElementById("hi" + i).innerHTML = "--";
+	}
+}
+</script>
+
+</head>
+
+<body onload="daysOfWeek();update()">
+<div class = "container-fluid"  style = "font-family: courier; background-color: black; color: white;">
+<center>
+<h3> Search for a place </h3>
+<h5> by address or zip</h5>
+<input type = "text" id = "searchbox" value = "Texas Tech University" style="color: black">
+<input type = "button" id = "searchbutton" value = "search" style="color: black" onclick = "update()">
+</center>
+</div>
+
+<div class="container-fluid" style = "font-family:courier; font-size:120%">
+	<div class = "row">
+				<iframe id = "mapFrame" style = "height:510px" class="h-100 col-lg-6" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBdipYMkYZjIaWh_WwgU2J51MHULF2sfFQ&q=77584" allowfullscreen></iframe>
+		<div class = "col-lg-6">
+		<center>
+		<br>
+		<br>
+		<img src="noresult.png" alt="No result or invalid address." id = "weatherImage" width = "150px" height = "90px">
+		<br>
+		<br>
+		</center>
+			<div class = "row">
+				<div class = "col-lg-6" id="cityName" style = "font-size: 300%; font-family:courier;"> <center>Pearland</center></div>
+				<div class = "col-lg-6" id = "todayTemp" style = "font-size: 300%; font-family:courier;"> <center>100/100 </center></div>
+			</div>
+			<div class= "row" id = "weatherDescription">
+				<center>Loading...</center>
+			</div>
+			<br>
+			<div class = "row">
+				<div class = "col-lg-2" id = "day0">
+					BlankDay
+				</div>
+				<div class = "col-lg-7">
+					<center><img src = "noresult.png" style = "width:75px;height:45px" id = "ico0"></center>
+				</div>
+				
+				<div class = "col-lg-1" id = "hi0">100</div>
+				<div class = "col-lg-1"> &nbsp </div>
+				<div class = "col-lg-1" id = "lo0">100</div>
+			</div>
+			<br>
+			<div class = "row">
+				<div class = "col-lg-2" id = "day1">
+					BlankDay
+				</div>
+				<div class = "col-lg-7">
+					<center><img src = "noresult.png" style = "width:75px;height:45px" id = "ico1"></center>
+				</div>
+				
+				<div class = "col-lg-1" id = "hi1">100</div>
+				<div class = "col-lg-1"> &nbsp </div>
+				<div class = "col-lg-1" id = "lo1">100</div>
+			</div>
+			<br>
+			<div class = "row">
+				<div class = "col-lg-2" id = "day2">
+					BlankDay
+				</div>
+				<div class = "col-lg-7">
+					<center><img src = "noresult.png" style = "width:75px;height:45px" id = "ico2"></center>
+				</div>
+				
+				<div class = "col-lg-1" id = "hi2">100</div>
+				<div class = "col-lg-1"> &nbsp </div>
+				<div class = "col-lg-1" id = "lo2">100</div>
+			</div>
+			<br>
+			<div class = "row">
+				<div class = "col-lg-2" id = "day3">
+					BlankDay
+				</div>
+				<div class = "col-lg-7">
+					<center><img src = "noresult.png" style = "width:75px;height:45px" id = "ico3"></center>
+				</div>
+				
+				<div class = "col-lg-1" id = "hi3">100</div>
+				<div class = "col-lg-1"> &nbsp </div>
+				<div class = "col-lg-1" id = "lo3">100</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+</body>
+</html>
