@@ -55,8 +55,8 @@ function geocode() {
 			var i;
 			for(i=0; i < 4; i++){
 				document.getElementById("ico" + i).src = "./images/" + weaData.DailyForecasts[i+1].Day.Icon + ".png"
-				document.getElementById("lo" + i).innerHTML = weaData.DailyForecasts[i].Temperature.Minimum.Value;
-				document.getElementById("hi" + i).innerHTML = weaData.DailyForecasts[i].Temperature.Maximum.Value;
+				document.getElementById("lo" + i).innerHTML = weaData.DailyForecasts[i+1].Temperature.Minimum.Value;
+				document.getElementById("hi" + i).innerHTML = weaData.DailyForecasts[i+1].Temperature.Maximum.Value;
 			}
 			
 			});
