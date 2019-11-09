@@ -14,8 +14,8 @@ function update() {
 	geocode()
 }
 function daysOfWeek(){
-	document.getElementById("mapFrame").style = "height:" + (screen.height-240) + "px";
-	document.getElementById("weaCol").style = "height:" + (screen.height-240) + "px;background-color:#e6e6e6";
+	//document.getElementById("mapFrame").style = "height:" + (screen.height-240) + "px";
+	//document.getElementById("weaCol").style = "height:" + (screen.height-240) + "px;background-color:#e6e6e6";
 	console.log("height:" + screen.height);
 	var d = new Date();
 	var currentDay = d.getDay()+1;
@@ -85,7 +85,7 @@ function noResult(){
 </head>
 
 <body onload="daysOfWeek();update()">
-<div class = "container-fluid"  style = "font-family: courier; background-color: black; color: white;">
+<div class = "container-fluid"  style = "font-family: courier; background-color: black; color: white;height:20vh">
 <center>
 <h3> Search for a place </h3>
 <h5> by address or zip</h5>
@@ -96,18 +96,16 @@ function noResult(){
 
 <div class="container-fluid" style = "font-family:courier; font-size:120%">
 	<div class = "row">
-				<iframe id = "mapFrame" style = "height:510px" class="h-100 col-lg-6" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBdipYMkYZjIaWh_WwgU2J51MHULF2sfFQ&q=77584" allowfullscreen></iframe>
-		<div class = "col-lg-6" style = "background-color:#c2c2c2" id="weaCol">
+				<iframe id = "mapFrame" style = "height:80vh" class="col-lg-6" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBdipYMkYZjIaWh_WwgU2J51MHULF2sfFQ&q=77584" allowfullscreen></iframe>
+		<div class = "col-lg-6" style = "background-color:#c2c2c2;height:80vh" id="weaCol">
 		<center>
-		<br>
 		<br>
 		<img src="./images/noresult.png" id = "weatherImage" width = "150px" height = "90px">
 		<br>
-		<br>
 		</center>
 			<div class = "row">
-				<div class = "col-lg-6" id="cityName" style = "font-size: 300%; font-family:courier;"> <center>Loading...</center></div>
-				<div class = "col-lg-6" id = "todayTemp" style = "font-size: 300%; font-family:courier;"> <center>100/100 </center></div>
+				<div class = "col-lg-6" id="cityName" style = "font-size: 200%; font-family:courier;font-weight:bold"> <center>Loading...</center></div>
+				<div class = "col-lg-6" id = "todayTemp" style = "font-size: 200%; font-family:courier;font-weight:bold"> <center>100/100 </center></div>
 			</div>
 			<div class= "row" id = "weatherDescription">
 				<center>Loading...</center>
