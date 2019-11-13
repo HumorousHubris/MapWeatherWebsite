@@ -10,7 +10,7 @@
 <meta charset="utf-8">
 <script>
 function update() {
-	document.getElementById("mapFrame").src = "https://www.google.com/maps/embed/v1/place?key=AIzaSyBdipYMkYZjIaWh_WwgU2J51MHULF2sfFQ&q=" + document.getElementById("searchbox").value
+	document.getElementById("mapFrame").src = "https://www.google.com/maps/embed/v1/place?key=<KEY HERE>&q=" + document.getElementById("searchbox").value
 	geocode()
 }
 function daysOfWeek(){
@@ -32,7 +32,7 @@ function day2str(day) {
 }
 
 function geocode() {
-	var link = "https://maps.googleapis.com/maps/api/geocode/json?address=" + document.getElementById("searchbox").value + "&key=AIzaSyBdipYMkYZjIaWh_WwgU2J51MHULF2sfFQ"
+	var link = "https://maps.googleapis.com/maps/api/geocode/json?address=" + document.getElementById("searchbox").value + "&key=<KEY HERE>"
 	$.getJSON(link, function(data){
 		console.log(data);
 		if(data.status == "ZERO_RESULTS"){noResult(); return 0;}
@@ -42,12 +42,12 @@ function geocode() {
 		
 		lat = data.results[0].geometry.location.lat;
 		lng = data.results[0].geometry.location.lng;
-		var weatherLocLink = "http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=%09T3bLh61BmQg7PoH9VIsTgbmfRFCpBGdh&q=" + lat + "%2C" + lng;
+		var weatherLocLink = "http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=<KEY HERE>&q=" + lat + "%2C" + lng;
 		$.getJSON(weatherLocLink, function(weaLocData) {
 			console.log(weaLocData);
 			locCode = weaLocData.Key;
 			
-			var weatherLink = "http://dataservice.accuweather.com/forecasts/v1/daily/5day/" + locCode + "?apikey=%09T3bLh61BmQg7PoH9VIsTgbmfRFCpBGdh"
+			var weatherLink = "http://dataservice.accuweather.com/forecasts/v1/daily/5day/" + locCode + "?apikey=<KEY HERE>"
 			$.getJSON(weatherLink, function(weaData){
 			console.log(weaData);
 			document.getElementById("weatherDescription").innerHTML = "<center>" + weaData.Headline.Text + "</center>";
@@ -96,7 +96,7 @@ function noResult(){
 
 <div class="container-fluid" style = "font-family:courier; font-size:120%">
 	<div class = "row">
-				<iframe id = "mapFrame" style = "height:80vh" class="col-lg-6" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBdipYMkYZjIaWh_WwgU2J51MHULF2sfFQ&q=77584" allowfullscreen></iframe>
+				<iframe id = "mapFrame" style = "height:80vh" class="col-lg-6" src="https://www.google.com/maps/embed/v1/place?key=<KEY HERE>&q=77584" allowfullscreen></iframe>
 		<div class = "col-lg-6" style = "background-color:#c2c2c2;height:80vh" id="weaCol">
 		<center>
 		<br>
